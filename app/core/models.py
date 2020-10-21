@@ -61,7 +61,7 @@ class UserProfile(models.Model):
         on_delete=models.CASCADE,
         primary_key=True,
     )
-    name = models.CharField(max_length=100)
+    last_name = models.CharField(max_length=100)
     bio = models.TextField(default='', blank=True)
     preferred_name = models.CharField(max_length=100, null=True)
     avatar_url = models.CharField(max_length=255, null=True)

@@ -38,14 +38,49 @@ class UserManager(BaseUserManager):
 
 class User(AbstractBaseUser, PermissionsMixin):
     """Custom user model that supports using email instead of username"""
-    email = models.EmailField(max_length=255, unique=True)
+    email = models.EmailField(
+        verbose_name='email address',
+        max_length=255,
+        unique=True,
+    )
     name = models.CharField(max_length=255)
+
+    is_student = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
+    is_admin = models.BooleanField(default=False)
 
     objects = UserManager()
 
     USERNAME_FIELD = 'email'
+
+
+class UserProfile(models.Model):
+    user = models.OneToOneField(
+        User,
+        on_delete=models.CASCADE,
+        primary_key=True,
+    )
+    name = models.CharField(max_length=100)
+    bio = models.TextField(default='', blank=True)
+    preferred_name = models.CharField(max_length=100, null=True)
+    avatar_url = models.CharField(max_length=255, null=True)
+    discord_name = models.CharField(max_length=100, null=True)
+    github_username = models.CharField(max_length=100)
+    codepen_username = models.CharField(max_length=100, null=True)
+    fcc_profile_url = models.CharField(max_length=255, null=True)
+
+    LEVELS = (
+        (1, 'Level One'),
+        (2, 'Level Two'),
+    )
+    current_level = models.IntegerField(choices=LEVELS, default=1)
+
+    phone = models.CharField(max_length=50, null=True)
+    timezone = models.CharField(max_length=50, null=True)
+
+    def __str__(self):
+        return f'{self.name}'
 
 
 class Tag(models.Model):

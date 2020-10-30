@@ -7,13 +7,15 @@ from core import models
 
 class UserAdmin(BaseUserAdmin):
     ordering = ['id']
-    list_display = ['email', 'name']
+    list_display = ['email', 'name', 'is_student', 'is_staff', 'is_superuser']
+    list_filter = ['is_student', 'is_staff', 'is_superuser', 'is_active']
     fieldsets = (
         (None, {'fields': ('email', 'password')}),
         (_('Personal info'), {'fields': ('name',)}),
         (
             _('Permissions'),
-            {'fields': ('is_active', 'is_staff', 'is_superuser')}
+            {'fields': ('is_student', 'is_staff',
+                        'is_superuser', 'is_active')}
         ),
         (_('Important dates'), {'fields': ('last_login',)})
     )
@@ -23,9 +25,13 @@ class UserAdmin(BaseUserAdmin):
             'fields': ('email', 'password1', 'password2')
         }),
     )
+    search_fields = ('email',)
+    ordering = ('email',)
+    filter_horizontal = ()
 
 
 admin.site.register(models.User, UserAdmin)
 admin.site.register(models.Tag)
 admin.site.register(models.Ingredient)
 admin.site.register(models.Recipe)
+admin.site.register(models.UserProfile)
